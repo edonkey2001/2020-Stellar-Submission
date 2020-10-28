@@ -1,0 +1,25 @@
+version: '3.8'
+services:
+    web:
+        image: nginx:1.19
+        environment: 
+            - NGINX_HOST=bck.localhost
+        ports:
+            - 80:80
+            - 4000:4000
+        depends_on:
+            - bck
+        volumes:
+            - ./NGINX.conf:/etc/nginx/nginx.conf
+        networks:
+            - stellar-api
+    bck: #Stellar API Back End
+        image: edonkey2001/stellar-submission-backend:1.0
+        volumes:
+            - ./bck/server.js:/usr/src/app/server.js
+            - ./bck/src:/usr/src/app/src
+        networks:
+            - stellar-api
+    #frt: #Home Page Front End Not Yet Built
+networks:
+    stellar-api:
