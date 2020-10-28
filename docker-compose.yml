@@ -14,7 +14,7 @@ services:
         networks:
             - stellar-api
     bck: #Stellar API Back End
-        image: edonkey2001/stellar-submission-backend:1.0
+        image: edonkey2001/stellar-submission-backend:1.1
         volumes:
             - ./bck/server.js:/usr/src/app/server.js
             - ./bck/src:/usr/src/app/src
