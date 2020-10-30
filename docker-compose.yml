@@ -21,5 +21,15 @@ services:
         networks:
             - stellar-api
     #frt: #Home Page Front End Not Yet Built
+    db:
+        image: postgres
+        restart: always
+        environment:
+            POSTGRES_USER: stellarapi
+            POSTGRES_PASSWORD: localdev
+        volumes:
+            - ./db-data:/var/lib/postgresql/data
+        networks:
+            - stellar-api
 networks:
     stellar-api:
