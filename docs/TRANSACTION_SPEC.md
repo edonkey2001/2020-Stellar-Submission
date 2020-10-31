@@ -29,7 +29,7 @@ Sentences:
 * Payment: _ pay _ amount _ of _.
 * Asset/Account Creation: _ create _.
 * Add Signer: add _ to _ weighted _.
-* Change Threshold: threshold-_-change _.
+* Change Threshold: _ threshold-_-change _.
 
 
 Examples:

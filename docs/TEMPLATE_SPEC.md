@@ -42,13 +42,13 @@ Filled-in:
 
 ## EXECUTION Section
 
-Desribes how to execute a series of transactions (see TRANSACTION_SPEC.md). Transactions are executed sequentially. Transactions may be partial meaning they may be created and queried later for future execution after signed by the final remaining signers; denote these PARTIAL. They also may be timed; denote these TIME <LEDGER_NUMBER>.
+Desribes how to execute a series of transactions (see TRANSACTION_SPEC.md). Transactions are executed sequentially. Transactions may be partial meaning they may be created and queried later for future execution after signed by the final remaining signers; denote these PARTIAL. They also may be timed; denote these TIME <LEDGER_NUMBER>. Finally, we have an array of expected signers.
 
 
 Example
 ```
 [EXECUTION]
-Tx1.tx
-PARTIAL Tx2.tx
-TIMED 10000000000 Tx3.tx
+Tx1.tx [TO]
+PARTIAL Tx2.tx [TO]
+TIMED 10000000000 Tx3.tx [FROM]
 ```
