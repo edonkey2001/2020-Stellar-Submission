@@ -7,6 +7,10 @@
  */
 const { Asset, Keypair } = require("stellar-sdk");
 
+// hack to capture generated accounts
+// NAME --> ACCOUNT (obj)
+const accountCache = {};
+
 // ------------------------------------ Process Methods ------------------------------------ //
 function processOperation(operation, findAndReplace) {
     const opType = operation.operationType;
@@ -73,19 +77,26 @@ function convertValue(label) {
         case "ACCOUNT":
             return Keypair.fromPublicKey(label.value);
 
-        // TODO: will need the secret or won't actually be able to use :(
+        // assign account then switch type so only assigned once
         case "NEW_ACCOUNT":
-            return Keypair.random();
+            const key = Keypair.random();
+            accountCache[label.name] = key;
+            label.value = key.publicKey();
+            label.type = "ACCOUNT";
+            return key;
     }
 }
 
 // ------------------------------------ Main Method ------------------------------------ //
 // may fail, propagate error
 function preprocessTransactionPhase(template, transactions){
-    return transactions.map(tx => {
-        tx.operations.forEach(op => processOperation(op, findAndReplace(template)));
-        return tx;
-    });
+    return {
+            transactions: transactions.map(tx => {
+                                             tx.operations.forEach(op => processOperation(op, findAndReplace(template)));
+                                            return tx;
+                                        }),
+            accountCache
+                                    };
 }
 
 module.exports = {

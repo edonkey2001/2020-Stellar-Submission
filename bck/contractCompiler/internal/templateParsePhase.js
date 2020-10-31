@@ -15,19 +15,20 @@ class Label {
     }
 }
 
-class Transaction {
-    constructor(filename, isPartial, timedInterval)
+class Execution {
+    constructor(filename, isPartial, timedInterval, signers)
     {
         this.filename = filename;
         this.isPartial = isPartial;
         this.timedInterval = timedInterval;
+        this.signers = signers;
     }
 }
 
 class TemplateManifest {
-    constructor(labels, transactions) {
+    constructor(labels, executions) {
         this.labels = labels;
-        this.transactions = transactions;
+        this.executions = executions;
     }
 }
 
@@ -75,14 +76,32 @@ function parseTemplate(content) {
 }
 
 function parseTransaction(content) {
-    const splitted = content.trim().split(' ');
+    content = content.trim();
+    const signerSplit = content.indexOf('[');
+
+    if (signerSplit == -1) {
+        throw Error("Expected signers");
+    }
+
+    const signers = parseSignerArray(content.substring(signerSplit));
+    const splitted = content.substring(0, signerSplit - 1).split(' ');
     switch(splitted.length)
     {
-        case 1: return new Transaction(splitted[0], false, -1);
-        case 2: return new Transaction(splitted[1], true, -1);
-        case 3: return  new Transaction(splitted[2], false, splitted[1]);
+        case 1: return new Execution(splitted[0], false, -1, signers);
+        case 2: return new Execution(splitted[1], true, -1, signers);
+        case 3: return  new Execution(splitted[2], false, splitted[1], signers);
         default: throw Error("Too many items in Execution");
     }
+}
+
+function parseSignerArray(content) {
+    if (content[0] != '[') {
+        throw Error("Signers in execution improperly formatted");
+    }
+
+    content = content.substring(1, content.indexOf(']'));
+    const splitted = content.split(',');
+    return splitted.map(x => x.trim());
 }
 
 // ------------------------------------ Main Method ------------------------------------ //

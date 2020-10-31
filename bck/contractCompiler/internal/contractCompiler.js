@@ -15,11 +15,12 @@ const { transpileTransactionPhase } = require("./transpileTransactionPhase");
 // may fail, propagate error
 function compileContract(templateFilePath, transactionFileDir, source) {
     const template = templateParsePhase(templateFilePath);
-    let transactions = transactionFileParsePhase(transactionFileDir);
-    transactions = preprocessTransactionPhase(template, transactions);
+    var transactions = transactionFileParsePhase(transactionFileDir);
+    var { transactions, accountCache } = preprocessTransactionPhase(template, transactions);
     return {
         transactions: transpileTransactionPhase(transactions, source),
         template,
+        accountCache,
     };
 }
 

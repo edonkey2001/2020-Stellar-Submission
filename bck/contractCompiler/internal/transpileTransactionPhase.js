@@ -6,6 +6,14 @@
  */
 const { Operation, TransactionBuilder, BASE_FEE, Networks } = require("stellar-sdk");
 
+// ------------------------------------ Define Classes ------------------------------------ //
+class Transaction {
+    constructor(filename, transaction) {
+        this.filename = filename;
+        this.transaction = transaction;
+    }
+}
+
 // ------------------------------------ Transpile Methods ------------------------------------ //
 function processOperation(operation) {
     const opType = operation.operationType;
@@ -80,10 +88,8 @@ function transpileTransactionPhase(transactions, source){
             txbase.addOperation(op);
         })
 
-        return {
-            transaction: txbase.setTimeout(30).build(),
-            filepath: tx.filepath,
-        }
+        const splittedFilePath = tx.filepath.split('/');
+        return new Transaction(splittedFilePath[splittedFilePath.length - 1], txbase.setTimeout(30).build());
     });
 }
 
